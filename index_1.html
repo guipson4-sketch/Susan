@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Catálogo digital de joyería VALIAM. Arma tu pedido y envíalo por WhatsApp.">
+<link rel="icon" href="data:,">
+<title>VALIAM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#1c1712;
+    --ink-soft:#3a3226;
+    --gold:#b8935a;
+    --gold-deep:#8f6f42;
+    --gold-light:#e6cd9d;
+    --ivory:#f6f1e6;
+    --ivory-deep:#ece2cc;
+    --line:#ddcfab;
+    --card-bg:#fffdf9;
+    --danger:#a4482f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:'Jost',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;
+    text-wrap:balance;
+    letter-spacing:.01em;
+  }
+  .kicker{
+    text-transform:uppercase;
+    letter-spacing:.22em;
+    font-size:.68rem;
+    font-weight:500;
+    color:var(--gold-deep);
+  }
+  a{color:inherit;}
+  button{font-family:inherit;cursor:pointer;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;top:0;z-index:30;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:.6rem clamp(1.2rem,4vw,3rem);
+    background:rgba(246,241,230,.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  header img{height:54px;width:auto;display:block;}
+  .cart-btn{
+    position:relative;
+    display:flex;align-items:center;gap:.5rem;
+    background:var(--ink);color:var(--ivory);
+    border:none;border-radius:999px;
+    padding:.6rem 1.1rem;
+    font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;
+    transition:background .18s ease;
+  }
+  .cart-btn:hover{background:var(--ink-soft);}
+  .cart-btn svg{width:17px;height:17px;stroke:var(--gold-light);}
+  .cart-count{
+    position:absolute;top:-7px;right:-7px;
+    background:var(--gold);color:var(--ink);
+    font-family:'Jost',sans-serif;font-weight:600;font-size:.7rem;
+    width:20px;height:20px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid var(--ivory);
+  }
+  .cart-count[hidden]{display:none;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    max-width:760px;margin:0 auto;
+    padding:clamp(2.4rem,6vw,4rem) 1.5rem 1.8rem;
+    text-align:center;
+  }
+  .hero .kicker{margin-bottom:.9rem;}
+  .hero h1{font-size:clamp(1.6rem,3.4vw,2.3rem);line-height:1.3;margin:0 0 1.4rem;color:var(--ink);}
+  .divider{display:flex;align-items:center;justify-content:center;gap:.9rem;color:var(--gold);}
+  .divider .rule{height:1px;width:64px;background:var(--line);}
+  .divider svg{width:14px;height:14px;fill:var(--gold);}
+
+  /* ---------- Filters ---------- */
+  .filters{
+    max-width:1080px;margin:0 auto;
+    display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;
+    padding:1.8rem 1.5rem .4rem;
+  }
+  .filter{
+    border:1px solid var(--line);background:transparent;
+    color:var(--ink-soft);
+    padding:.45rem 1.1rem;border-radius:999px;
+    font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+    transition:all .16s ease;
+  }
+  .filter:hover{border-color:var(--gold);color:var(--ink);}
+  .filter.active{background:var(--ink);border-color:var(--ink);color:var(--ivory);}
+
+  /* ---------- Grid ---------- */
+  .grid{
+    max-width:1080px;margin:0 auto;
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:1.6rem;
+    padding:1.6rem clamp(1.2rem,4vw,1.5rem) 4rem;
+  }
+  .card{
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+  }
+  .card-art{
+    aspect-ratio:1/1;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(160deg,var(--ivory-deep),var(--ivory));
+    color:var(--gold-deep);
+  }
+  .card-art svg{width:46%;height:46%;}
+  .card-body{padding:1.1rem 1.2rem 1.3rem;display:flex;flex-direction:column;gap:.35rem;flex:1;}
+  .card-body .kicker{font-size:.62rem;}
+  .card-body h3{font-size:1.32rem;margin:.05rem 0 0;color:var(--ink);}
+  .card-body p{margin:0;font-size:.82rem;color:var(--ink-soft);line-height:1.4;}
+  .card-foot{
+    margin-top:auto;padding-top:.8rem;
+    display:flex;align-items:center;justify-content:space-between;
+    border-top:1px solid var(--line);
+  }
+  .price{font-variant-numeric:tabular-nums;font-weight:600;font-size:1rem;}
+  .add-btn{
+    background:none;border:1px solid var(--ink);color:var(--ink);
+    padding:.42rem .95rem;border-radius:999px;
+    font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+    transition:all .16s ease;
+  }
+  .add-btn:hover{background:var(--ink);color:var(--ivory);}
+  .add-btn.added{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--ivory);}
+
+  /* ---------- Footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:2.4rem 1.5rem 3rem;
+    text-align:center;
+    color:var(--ink-soft);
+  }
+  footer .brand{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.06em;color:var(--ink);}
+  footer .wa{margin-top:.5rem;font-size:.82rem;}
+  footer .wa a{color:var(--gold-deep);text-decoration:none;border-bottom:1px solid var(--gold-light);}
+
+  /* ---------- Cart drawer ---------- */
+  .scrim{
+    position:fixed;inset:0;background:rgba(28,23,18,.42);
+    opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:40;
+  }
+  .scrim.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;
+    width:min(400px,100%);
+    background:var(--ivory);
+    border-left:1px solid var(--line);
+    display:flex;flex-direction:column;
+    transform:translateX(100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    z-index:41;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.2rem 1.4rem;border-bottom:1px solid var(--line);
+  }
+  .drawer-head h2{font-size:1.4rem;margin:0;}
+  .drawer-close{background:none;border:none;font-size:1.3rem;line-height:1;color:var(--ink-soft);padding:.2rem;}
+  .drawer-items{flex:1;overflow-y:auto;padding:1rem 1.4rem;display:flex;flex-direction:column;gap:1rem;}
+  .empty-cart{margin:auto;text-align:center;color:var(--ink-soft);font-size:.9rem;max-width:220px;}
+  .line-item{display:flex;gap:.8rem;align-items:flex-start;}
+  .line-item .li-art{
+    width:52px;height:52px;flex:none;border-radius:3px;
+    background:var(--ivory-deep);display:flex;align-items:center;justify-content:center;color:var(--gold-deep);
+  }
+  .line-item .li-art svg{width:60%;height:60%;}
+  .li-info{flex:1;min-width:0;}
+  .li-info h4{margin:0 0 .15rem;font-size:1.02rem;font-family:'Cormorant Garamond',serif;font-weight:600;}
+  .li-info .price{font-size:.85rem;color:var(--ink-soft);font-weight:500;}
+  .qty-row{display:flex;align-items:center;gap:.5rem;margin-top:.4rem;}
+  .qty-btn{
+    width:22px;height:22px;border:1px solid var(--line);background:var(--card-bg);
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:.85rem;color:var(--ink);
+  }
+  .qty-val{font-variant-numeric:tabular-nums;font-size:.85rem;min-width:1.2em;text-align:center;}
+  .remove-btn{
+    background:none;border:none;color:var(--danger);font-size:.7rem;
+    letter-spacing:.08em;text-transform:uppercase;padding:0;margin-top:.5rem;
+    text-decoration:underline;text-underline-offset:2px;
+  }
+  .drawer-foot{border-top:1px solid var(--line);padding:1.2rem 1.4rem 1.5rem;}
+  .subtotal-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1rem;}
+  .subtotal-row span:first-child{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);}
+  .subtotal-row span:last-child{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;font-variant-numeric:tabular-nums;}
+  .checkout-btn{
+    width:100%;background:var(--ink);color:var(--ivory);border:none;
+    padding:.9rem 1rem;border-radius:4px;
+    font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+    display:flex;align-items:center;justify-content:center;gap:.55rem;
+    transition:background .16s ease;
+  }
+  .checkout-btn:hover{background:var(--ink-soft);}
+  .checkout-btn:disabled{opacity:.45;cursor:not-allowed;}
+  .checkout-btn svg{width:16px;height:16px;fill:#fff;}
+  .clear-link{
+    display:block;text-align:center;margin-top:.7rem;font-size:.7rem;
+    color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase;
+    background:none;border:none;width:100%;text-decoration:underline;text-underline-offset:2px;
+  }
+
+  @media (max-width:520px){
+    header img{height:42px;}
+    .cart-btn span.label{display:none;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="VALIAM">
+  <button class="cart-btn" id="openCart" aria-haspopup="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h15l-1.5 9.5a2 2 0 0 1-2 1.7H8.7a2 2 0 0 1-2-1.7L5 4H2"/><circle cx="9" cy="21" r="1.2" fill="currentColor" stroke="none"/><circle cx="18" cy="21" r="1.2" fill="currentColor" stroke="none"/></svg>
+    <span class="label">Carrito</span>
+    <span class="cart-count" id="cartCount" hidden>0</span>
+  </button>
+</header>
+
+<section class="hero">
+  <div class="kicker">Piezas de mérito propio</div>
+  <h1>Cada pieza es la prueba física de algo que ya conseguiste.</h1>
+  <div class="divider"><span class="rule"></span><svg viewBox="0 0 24 24"><path d="M12 0c0 6 2 10 12 12-10 2-12 6-12 12 0-6-2-10-12-12C10 10 12 6 12 0Z"/></svg><span class="rule"></span></div>
+</section>
+
+<nav class="filters" id="filters">
+  <button class="filter active" data-cat="todo">Todo</button>
+  <button class="filter" data-cat="anillos">Anillos</button>
+  <button class="filter" data-cat="collares">Collares</button>
+  <button class="filter" data-cat="aretes">Aretes</button>
+  <button class="filter" data-cat="pulseras">Pulseras</button>
+</nav>
+
+<main class="grid" id="grid"></main>
+
+<footer>
+  <div class="brand">VALIAM</div>
+  <div class="wa">Pedidos y consultas por WhatsApp: <a href="https://wa.me/51969080504" target="_blank" rel="noopener">969 080 504</a></div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Carrito de compras">
+  <div class="drawer-head">
+    <h2>Tu carrito</h2>
+    <button class="drawer-close" id="closeCart" aria-label="Cerrar carrito">&times;</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="subtotal-row"><span>Subtotal</span><span id="subtotal">S/ 0</span></div>
+    <button class="checkout-btn" id="checkoutBtn" disabled>
+      <svg viewBox="0 0 32 32"><path d="M16.7 3C9.3 3 3.3 9 3.3 16.4c0 2.6.7 5 2 7.1L3 29l5.7-2.2c2 1.1 4.3 1.7 6.6 1.7 7.4 0 13.4-6 13.4-13.4S24.1 3 16.7 3zm0 24.3c-2.1 0-4.1-.6-5.8-1.6l-.4-.2-4.3 1.6 1.6-4.2-.3-.4a10.9 10.9 0 0 1-1.7-5.9C6 10.2 10.8 5.4 16.7 5.4S27.4 10.2 27.4 16 22.6 27.3 16.7 27.3zm6-8.1c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2s-.9 1.1-1.1 1.3-.4.3-.7.1a8.9 8.9 0 0 1-4.4-3.9c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5s-.8-1.9-1.1-2.6c-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.4 1.4 3.6c.2.3 2.4 3.7 5.9 5.1.8.3 1.5.5 2 .7.8.3 1.6.2 2.1.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg>
+      Pedir por WhatsApp
+    </button>
+    <button class="clear-link" id="clearCart">Vaciar carrito</button>
+  </div>
+</aside>
+
+<script>
+(function(){
+  var ICONS = {
+    anillo: '<svg viewBox="0 0 48 48"><circle cx="24" cy="30" r="11" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M24 8 L30 17 L24 22 L18 17 Z" fill="currentColor"/></svg>',
+    collar: '<svg viewBox="0 0 48 48"><path d="M6 10 Q24 34 42 10" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M24 28 L29 35 L24 42 L19 35 Z" fill="currentColor"/></svg>',
+    aretes: '<svg viewBox="0 0 48 48"><circle cx="16" cy="12" r="2.6" fill="currentColor"/><path d="M16 15 Q11 24 16 30 Q21 24 16 15 Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="12" r="2.6" fill="currentColor"/><path d="M32 15 Q27 24 32 30 Q37 24 32 15 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+    pulsera: '<svg viewBox="0 0 48 48"><ellipse cx="24" cy="27" rx="16" ry="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M24 12 L28.5 18 L24 22 L19.5 18 Z" fill="currentColor"/></svg>'
+  };
+
+  var PRODUCTS = [
+    {id:'an-01',cat:'anillos',icon:'anillo',name:'Anillo Cumbre',desc:'Plata 925, circonia blanca engastada',price:189},
+    {id:'an-02',cat:'anillos',icon:'anillo',name:'Anillo Corona',desc:'Baño de oro 18k, línea minimalista',price:219},
+    {id:'co-01',cat:'collares',icon:'collar',name:'Collar Ascenso',desc:'Plata 925, dije geométrico',price:245},
+    {id:'co-02',cat:'collares',icon:'collar',name:'Collar Firmamento',desc:'Baño de oro 18k con circonia',price:289},
+    {id:'ar-01',cat:'aretes',icon:'aretes',name:'Aretes Vértice',desc:'Plata 925, corte geométrico',price:159},
+    {id:'ar-02',cat:'aretes',icon:'aretes',name:'Aretes Punto Alto',desc:'Baño de oro 18k, colgantes',price:175},
+    {id:'pu-01',cat:'pulseras',icon:'pulsera',name:'Pulsera Mérito',desc:'Plata 925, cadena cubana',price:199},
+    {id:'pu-02',cat:'pulseras',icon:'pulsera',name:'Pulsera Triunfo',desc:'Baño de oro 18k, eslabón grueso',price:259}
+  ];
+
+  var grid = document.getElementById('grid');
+  var filtersEl = document.getElementById('filters');
+  var currentCat = 'todo';
+
+  function renderGrid(){
+    grid.innerHTML = '';
+    PRODUCTS.filter(function(p){return currentCat==='todo' || p.cat===currentCat;}).forEach(function(p){
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML =
+        '<div class="card-art">'+ICONS[p.icon]+'</div>'+
+        '<div class="card-body">'+
+          '<div class="kicker">'+p.cat+'</div>'+
+          '<h3>'+p.name+'</h3>'+
+          '<p>'+p.desc+'</p>'+
+          '<div class="card-foot">'+
+            '<span class="price">S/ '+p.price+'</span>'+
+            '<button class="add-btn" data-id="'+p.id+'">Agregar</button>'+
+          '</div>'+
+        '</div>';
+      grid.appendChild(card);
+    });
+  }
+
+  filtersEl.addEventListener('click', function(e){
+    var btn = e.target.closest('.filter');
+    if(!btn) return;
+    currentCat = btn.dataset.cat;
+    filtersEl.querySelectorAll('.filter').forEach(function(f){f.classList.toggle('active', f===btn);});
+    renderGrid();
+  });
+
+  /* ---------- Cart state ---------- */
+  var cart = {};
+  function loadCart(){
+    try{
+      var raw = localStorage.getItem('valiam_cart');
+      if(raw) cart = JSON.parse(raw) || {};
+    }catch(e){ cart = {}; }
+  }
+  function saveCart(){
+    try{ localStorage.setItem('valiam_cart', JSON.stringify(cart)); }catch(e){}
+  }
+  function productById(id){ return PRODUCTS.find(function(p){return p.id===id;}); }
+
+  function addToCart(id){
+    cart[id] = (cart[id]||0) + 1;
+    saveCart(); renderAll();
+  }
+  function changeQty(id, delta){
+    if(!cart[id]) return;
+    cart[id] += delta;
+    if(cart[id] <= 0) delete cart[id];
+    saveCart(); renderAll();
+  }
+  function removeItem(id){
+    delete cart[id];
+    saveCart(); renderAll();
+  }
+  function clearCart(){
+    cart = {};
+    saveCart(); renderAll();
+  }
+
+  function cartCount(){
+    return Object.keys(cart).reduce(function(sum,id){return sum+cart[id];},0);
+  }
+  function cartTotal(){
+    return Object.keys(cart).reduce(function(sum,id){
+      var p = productById(id); return p ? sum + p.price*cart[id] : sum;
+    },0);
+  }
+
+  var cartCountEl = document.getElementById('cartCount');
+  var drawerItems = document.getElementById('drawerItems');
+  var subtotalEl = document.getElementById('subtotal');
+  var checkoutBtn = document.getElementById('checkoutBtn');
+
+  function renderCart(){
+    var ids = Object.keys(cart);
+    if(ids.length === 0){
+      drawerItems.innerHTML = '<div class="empty-cart">Tu carrito está vacío. Elige piezas del catálogo para armar tu pedido.</div>';
+      checkoutBtn.disabled = true;
+    } else {
+      drawerItems.innerHTML = ids.map(function(id){
+        var p = productById(id); if(!p) return '';
+        return '<div class="line-item">'+
+          '<div class="li-art">'+ICONS[p.icon]+'</div>'+
+          '<div class="li-info">'+
+            '<h4>'+p.name+'</h4>'+
+            '<div class="price">S/ '+p.price+'</div>'+
+            '<div class="qty-row">'+
+              '<button class="qty-btn" data-act="dec" data-id="'+id+'">&minus;</button>'+
+              '<span class="qty-val">'+cart[id]+'</span>'+
+              '<button class="qty-btn" data-act="inc" data-id="'+id+'">+</button>'+
+            '</div>'+
+            '<button class="remove-btn" data-act="rm" data-id="'+id+'">Quitar</button>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+      checkoutBtn.disabled = false;
+    }
+    var count = cartCount();
+    cartCountEl.hidden = count===0;
+    cartCountEl.textContent = count;
+    subtotalEl.textContent = 'S/ '+cartTotal();
+  }
+
+  function renderAll(){ renderGrid(); renderCart(); }
+
+  grid.addEventListener('click', function(e){
+    var btn = e.target.closest('.add-btn');
+    if(!btn) return;
+    addToCart(btn.dataset.id);
+    btn.classList.add('added');
+    btn.textContent = 'Agregado';
+    setTimeout(function(){ btn.classList.remove('added'); btn.textContent='Agregar'; }, 900);
+  });
+
+  drawerItems.addEventListener('click', function(e){
+    var btn = e.target.closest('button[data-act]');
+    if(!btn) return;
+    var id = btn.dataset.id, act = btn.dataset.act;
+    if(act==='inc') changeQty(id, 1);
+    if(act==='dec') changeQty(id, -1);
+    if(act==='rm') removeItem(id);
+  });
+
+  document.getElementById('clearCart').addEventListener('click', clearCart);
+
+  /* ---------- Drawer open/close ---------- */
+  var drawer = document.getElementById('drawer');
+  var scrim = document.getElementById('scrim');
+  function openDrawer(){ drawer.classList.add('open'); scrim.classList.add('open'); }
+  function closeDrawer(){ drawer.classList.remove('open'); scrim.classList.remove('open'); }
+  document.getElementById('openCart').addEventListener('click', openDrawer);
+  document.getElementById('closeCart').addEventListener('click', closeDrawer);
+  scrim.addEventListener('click', closeDrawer);
+
+  /* ---------- WhatsApp checkout ---------- */
+  checkoutBtn.addEventListener('click', function(){
+    var ids = Object.keys(cart);
+    if(ids.length===0) return;
+    var lines = ids.map(function(id){
+      var p = productById(id);
+      return cart[id]+'x '+p.name+' — S/ '+(p.price*cart[id]);
+    });
+    var msg = 'Hola, VALIAM. Quiero hacer el siguiente pedido:\n\n'
+      + lines.join('\n')
+      + '\n\nTotal: S/ '+cartTotal()
+      + '\n\nNombre:\nDirección de envío:';
+    var url = 'https://wa.me/51969080504?text=' + encodeURIComponent(msg);
+    window.open(url, '_blank', 'noopener');
+  });
+
+  loadCart();
+  renderAll();
+})();
+</script>
+</body>
+</html>
