@@ -126,6 +126,7 @@
     color:var(--gold-deep);
   }
   .card-art svg{width:46%;height:46%;}
+  .card-photo{width:100%;height:100%;object-fit:cover;display:block;}
   .stock-tag{
     position:absolute;top:.6rem;right:.6rem;
     background:var(--ink);color:var(--gold-light);
@@ -530,7 +531,7 @@
       var card = document.createElement('div');
       card.className = 'card'+(soldOut?' sold-out':'');
       card.innerHTML =
-        '<div class="card-art'+(media?' has-media':'')+'" data-id="'+p.id+'">'+ICONS[p.icon]+tag+badge+'</div>'+
+        '<div class="card-art'+(media?' has-media':'')+'" data-id="'+p.id+'">'+(media?'<img class="card-photo" src="'+media.photos[0]+'" alt="'+p.name+'" loading="lazy">':ICONS[p.icon])+tag+badge+'</div>'+
         '<div class="card-body">'+
           '<div class="kicker">'+p.cat+'</div>'+
           '<h3>'+p.name+'</h3>'+
