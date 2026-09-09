@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Catálogo digital de joyería VALIAM. Arma tu pedido y envíalo por WhatsApp.">
+<meta name="description" content="Kukis Colors — Catálogo digital de aretes, anillos, cadenas y pulseras.">
 <link rel="icon" href="data:,">
-<title>VALIAM</title>
+<title>Kukis Colors</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap">
 <style>
@@ -54,7 +54,7 @@
     backdrop-filter:blur(6px);
     border-bottom:1px solid var(--line);
   }
-  header img{height:54px;width:auto;display:block;}
+  header img{height:64px;width:auto;display:block;}
   .cart-btn{
     position:relative;
     display:flex;align-items:center;gap:.5rem;
@@ -119,12 +119,21 @@
     overflow:hidden;
   }
   .card-art{
+    position:relative;
     aspect-ratio:1/1;
     display:flex;align-items:center;justify-content:center;
     background:linear-gradient(160deg,var(--ivory-deep),var(--ivory));
     color:var(--gold-deep);
   }
   .card-art svg{width:46%;height:46%;}
+  .stock-tag{
+    position:absolute;top:.6rem;right:.6rem;
+    background:var(--ink);color:var(--gold-light);
+    font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;
+    padding:.28rem .55rem;border-radius:999px;
+  }
+  .stock-tag.out{background:var(--danger);color:#fff;}
+  .card.sold-out .card-art{opacity:.55;}
   .card-body{padding:1.1rem 1.2rem 1.3rem;display:flex;flex-direction:column;gap:.35rem;flex:1;}
   .card-body .kicker{font-size:.62rem;}
   .card-body h3{font-size:1.32rem;margin:.05rem 0 0;color:var(--ink);}
@@ -143,6 +152,8 @@
   }
   .add-btn:hover{background:var(--ink);color:var(--ivory);}
   .add-btn.added{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--ivory);}
+  .add-btn:disabled{opacity:.4;cursor:not-allowed;background:none;color:var(--ink);}
+  .add-btn:disabled:hover{background:none;color:var(--ink);}
 
   /* ---------- Footer ---------- */
   footer{
@@ -221,15 +232,76 @@
     background:none;border:none;width:100%;text-decoration:underline;text-underline-offset:2px;
   }
 
+  /* ---------- Ficha de producto (galería + descripción) ---------- */
+  .card-art{cursor:default;}
+  .card-art.has-media{cursor:pointer;}
+  .photo-badge{
+    position:absolute;bottom:.6rem;left:.6rem;
+    display:flex;align-items:center;gap:.3rem;
+    background:rgba(28,23,18,.78);color:var(--ivory);
+    font-size:.62rem;letter-spacing:.04em;
+    padding:.28rem .55rem;border-radius:999px;
+  }
+  .photo-badge svg{width:12px;height:12px;fill:var(--gold-light);}
+  .pmodal-scrim{
+    position:fixed;inset:0;background:rgba(28,23,18,.55);
+    opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:50;
+  }
+  .pmodal-scrim.open{opacity:1;pointer-events:auto;}
+  .pmodal{
+    position:fixed;top:50%;left:50%;
+    transform:translate(-50%,-48%);
+    width:min(880px,92vw);max-height:88vh;overflow-y:auto;
+    background:var(--card-bg);border-radius:6px;
+    display:grid;grid-template-columns:1.1fr 1fr;
+    opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;
+    z-index:51;
+  }
+  .pmodal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%);}
+  .pmodal-close{
+    position:absolute;top:.7rem;right:.9rem;z-index:2;
+    background:rgba(28,23,18,.7);color:var(--ivory);border:none;
+    width:30px;height:30px;border-radius:50%;font-size:1.2rem;line-height:1;
+  }
+  .pmodal-gallery{position:relative;background:linear-gradient(160deg,var(--ivory-deep),var(--ivory));}
+  .pmodal-main{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .pmodal-main img{width:100%;height:100%;object-fit:cover;display:block;}
+  .pmodal-main .card-art-icon{width:46%;height:46%;color:var(--gold-deep);}
+  .pmodal-arrow{
+    position:absolute;top:50%;transform:translateY(-50%);
+    background:rgba(255,253,249,.85);border:1px solid var(--line);
+    width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--ink);
+  }
+  .pmodal-arrow.prev{left:.7rem;}
+  .pmodal-arrow.next{right:.7rem;}
+  .pmodal-thumbs{display:flex;gap:.5rem;padding:.7rem;overflow-x:auto;}
+  .pmodal-thumbs img{
+    width:52px;height:52px;object-fit:cover;border-radius:3px;cursor:pointer;
+    border:2px solid transparent;opacity:.6;flex:none;
+  }
+  .pmodal-thumbs img.active{border-color:var(--gold);opacity:1;}
+  .pmodal-body{padding:1.6rem 1.7rem;display:flex;flex-direction:column;}
+  .pmodal-body h2{font-size:1.6rem;margin:.2rem 0 .6rem;}
+  .pmodal-body .desc{font-size:.85rem;color:var(--ink-soft);line-height:1.6;white-space:pre-line;margin:0 0 1.2rem;}
+  .pmodal-body .price{font-size:1.3rem;margin-bottom:1.1rem;}
+  .pmodal-body .add-btn{align-self:flex-start;padding:.6rem 1.4rem;}
+
+  @media (max-width:640px){
+    .pmodal{grid-template-columns:1fr;width:92vw;}
+  }
+
   @media (max-width:520px){
-    header img{height:42px;}
+    header img{height:48px;}
     .cart-btn span.label{display:none;}
   }
 </style>
 </head>
 <body>
+
+
 <header>
-  <img src="logo.png" alt="VALIAM">
+  <img src="logo.png" alt="Kukis Colors">
   <button class="cart-btn" id="openCart" aria-haspopup="true">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h15l-1.5 9.5a2 2 0 0 1-2 1.7H8.7a2 2 0 0 1-2-1.7L5 4H2"/><circle cx="9" cy="21" r="1.2" fill="currentColor" stroke="none"/><circle cx="18" cy="21" r="1.2" fill="currentColor" stroke="none"/></svg>
     <span class="label">Carrito</span>
@@ -246,7 +318,7 @@
 <nav class="filters" id="filters">
   <button class="filter active" data-cat="todo">Todo</button>
   <button class="filter" data-cat="anillos">Anillos</button>
-  <button class="filter" data-cat="collares">Collares</button>
+  <button class="filter" data-cat="cadenas">Cadenas</button>
   <button class="filter" data-cat="aretes">Aretes</button>
   <button class="filter" data-cat="pulseras">Pulseras</button>
 </nav>
@@ -254,7 +326,7 @@
 <main class="grid" id="grid"></main>
 
 <footer>
-  <div class="brand">VALIAM</div>
+  <div class="brand">Kukis Colors</div>
   <div class="wa">Pedidos y consultas por WhatsApp: <a href="https://wa.me/51969080504" target="_blank" rel="noopener">969 080 504</a></div>
 </footer>
 
@@ -275,8 +347,43 @@
   </div>
 </aside>
 
+<div class="pmodal-scrim" id="pmodalScrim"></div>
+<div class="pmodal" id="pmodal" role="dialog" aria-modal="true" aria-label="Detalle del producto">
+  <div class="pmodal-gallery">
+    <button class="pmodal-close" id="pmodalClose" aria-label="Cerrar">&times;</button>
+    <div class="pmodal-main" id="pmodalMain"></div>
+    <button class="pmodal-arrow prev" id="pmodalPrev" aria-label="Foto anterior">&lsaquo;</button>
+    <button class="pmodal-arrow next" id="pmodalNext" aria-label="Foto siguiente">&rsaquo;</button>
+    <div class="pmodal-thumbs" id="pmodalThumbs"></div>
+  </div>
+  <div class="pmodal-body">
+    <div class="kicker" id="pmodalCat"></div>
+    <h2 id="pmodalName"></h2>
+    <p class="desc" id="pmodalDesc"></p>
+    <div class="price" id="pmodalPrice"></div>
+    <button class="add-btn" id="pmodalAdd">Agregar al carrito</button>
+  </div>
+</div>
+
 <script>
 (function(){
+  /* ---------- Conexión con Google Sheets (stock real) ----------
+     Reemplaza el texto de abajo por la URL que te da Google al publicar
+     tu Apps Script como "Aplicación web" (termina en /exec).
+     Mientras no la reemplaces, el catálogo funciona igual pero con
+     el stock que quedó guardado aquí la última vez. */
+  var SHEET_API_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
+
+  function normalizeName(s){
+    return String(s)
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/:/g,'')
+      .replace(/\s+/g,' ')
+      .trim()
+      .toUpperCase()
+      .replace(/^ANILLOS\b/, 'ANILLO');
+  }
+
   var ICONS = {
     anillo: '<svg viewBox="0 0 48 48"><circle cx="24" cy="30" r="11" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M24 8 L30 17 L24 22 L18 17 Z" fill="currentColor"/></svg>',
     collar: '<svg viewBox="0 0 48 48"><path d="M6 10 Q24 34 42 10" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M24 28 L29 35 L24 42 L19 35 Z" fill="currentColor"/></svg>',
@@ -285,15 +392,129 @@
   };
 
   var PRODUCTS = [
-    {id:'an-01',cat:'anillos',icon:'anillo',name:'Anillo Cumbre',desc:'Plata 925, circonia blanca engastada',price:189},
-    {id:'an-02',cat:'anillos',icon:'anillo',name:'Anillo Corona',desc:'Baño de oro 18k, línea minimalista',price:219},
-    {id:'co-01',cat:'collares',icon:'collar',name:'Collar Ascenso',desc:'Plata 925, dije geométrico',price:245},
-    {id:'co-02',cat:'collares',icon:'collar',name:'Collar Firmamento',desc:'Baño de oro 18k con circonia',price:289},
-    {id:'ar-01',cat:'aretes',icon:'aretes',name:'Aretes Vértice',desc:'Plata 925, corte geométrico',price:159},
-    {id:'ar-02',cat:'aretes',icon:'aretes',name:'Aretes Punto Alto',desc:'Baño de oro 18k, colgantes',price:175},
-    {id:'pu-01',cat:'pulseras',icon:'pulsera',name:'Pulsera Mérito',desc:'Plata 925, cadena cubana',price:199},
-    {id:'pu-02',cat:'pulseras',icon:'pulsera',name:'Pulsera Triunfo',desc:'Baño de oro 18k, eslabón grueso',price:259}
+    {id:'ar-01',cat:'aretes',icon:'aretes',name:'Aretes Estrella Punto de Luz',qty:3,price:25},
+    {id:'ar-02',cat:'aretes',icon:'aretes',name:'Aretes Nudo de Bruja',qty:4,price:25},
+    {id:'ar-03',cat:'aretes',icon:'aretes',name:'Aretes Mini Corazón',qty:4,price:25},
+    {id:'ar-04',cat:'aretes',icon:'aretes',name:'Aretes Bombita',qty:2,price:25},
+    {id:'ar-05',cat:'aretes',icon:'aretes',name:'Argollas Corazón Perla',qty:4,price:30},
+    {id:'ar-06',cat:'aretes',icon:'aretes',name:'Argollas Ada Luz',qty:4,price:30},
+    {id:'ar-07',cat:'aretes',icon:'aretes',name:'Argollas Cuadradas Lisas',qty:2,price:25},
+    {id:'ar-08',cat:'aretes',icon:'aretes',name:'Argollas Hojitas',qty:4,price:30},
+    {id:'ar-09',cat:'aretes',icon:'aretes',name:'Argollas Circones Color Pastel',qty:3,price:35},
+    {id:'ar-10',cat:'aretes',icon:'aretes',name:'Argollas Circones Colores',qty:3,price:35},
+    {id:'ar-11',cat:'aretes',icon:'aretes',name:'Aretes Circones Carmin',qty:2,price:40},
+    {id:'ar-12',cat:'aretes',icon:'aretes',name:'Aretes Rose',qty:1,price:40},
+    {id:'ar-13',cat:'aretes',icon:'aretes',name:'Aretes Estrellas de Mar',qty:1,price:40},
+    {id:'ar-14',cat:'aretes',icon:'aretes',name:'Argollas Lisas Medianas',qty:2,price:35},
+    {id:'ar-15',cat:'aretes',icon:'aretes',name:'Aretes Flor Chunky',qty:3,price:40},
+    {id:'ar-16',cat:'aretes',icon:'aretes',name:'Argollas Bambú',qty:3,price:40},
+    {id:'ar-17',cat:'aretes',icon:'aretes',name:'Aretes Geométricos Largos',qty:3,price:40},
+    {id:'ar-18',cat:'aretes',icon:'aretes',name:'Argollas Entorchadas Grandes',qty:3,price:40},
+    {id:'an-01',cat:'anillos',icon:'anillo',name:'Anillo Rose Talla 6 y 7',qty:9,price:30},
+    {id:'an-02',cat:'anillos',icon:'anillo',name:'Anillo Rose Talla 8 y 9',qty:8,price:30},
+    {id:'an-03',cat:'anillos',icon:'anillo',name:'Anillo Rose Talla 6, 7 y 8',qty:3,price:30},
+    {id:'an-04',cat:'anillos',icon:'anillo',name:'Anillo Rose Talla 5 y 6',qty:4,price:30},
+    {id:'ca-01',cat:'cadenas',icon:'collar',name:'Cadena Multicolor Dije Corazón Medida 45 cm',qty:2,price:70},
+    {id:'ca-02',cat:'cadenas',icon:'collar',name:'Cadena Rose Dije Tortuga Marina Medida 55 cm',qty:2,price:70},
+    {id:'ca-03',cat:'cadenas',icon:'collar',name:'Cadena Rose Dije Niña Medida 45 cm',qty:3,price:70},
+    {id:'ca-04',cat:'cadenas',icon:'collar',name:'Cadena Rose Dije Búho Medida 50 cm',qty:3,price:75},
+    {id:'ca-05',cat:'cadenas',icon:'collar',name:'Cadena Ángel de Alas 45 cm',qty:1,price:45},
+    {id:'ca-06',cat:'cadenas',icon:'collar',name:'Cadena Dije G Medida 50 cm',qty:3,price:65},
+    {id:'ca-07',cat:'cadenas',icon:'collar',name:'Cadena Dije I Medida 50 cm',qty:2,price:65},
+    {id:'ca-08',cat:'cadenas',icon:'collar',name:'Cadena Donas Mediana Medida 45 cm',qty:3,price:55},
+    {id:'ca-09',cat:'cadenas',icon:'collar',name:'Cadena Rosario María Medida 75 cm',qty:3,price:85},
+    {id:'ca-10',cat:'cadenas',icon:'collar',name:'Cadena Barbada Medida 50 cm',qty:3,price:75},
+    {id:'pu-01',cat:'pulseras',icon:'pulsera',name:'Pulsera Eslabones Medida 19 cm',qty:3,price:45},
+    {id:'pu-02',cat:'pulseras',icon:'pulsera',name:'Pulsera Billas Colores 19 cm + Extensión',qty:5,price:35},
+    {id:'pu-03',cat:'pulseras',icon:'pulsera',name:'Pulsera Gota Circones Medida 19 cm',qty:3,price:45},
+    {id:'pu-04',cat:'pulseras',icon:'pulsera',name:'Pulsera Ojo Turco Centro Medida 19 cm',qty:3,price:45},
+    {id:'pu-05',cat:'pulseras',icon:'pulsera',name:'Puñeras Rose con Dije Corazón y Tulipán Medida 60 mm',qty:6,price:60},
+    {id:'pu-06',cat:'pulseras',icon:'pulsera',name:'Pulsera Ojo Celeste Diamantado Medida 19 cm',qty:4,price:45}
   ];
+
+  /* Fichas con fotos y descripción propia. Se van sumando producto por
+     producto a medida que llegan las fotos; el que no tiene ficha aquí
+     sigue mostrándose normal, solo sin galería. */
+  var PRODUCT_MEDIA = {
+    'ar-01': {
+      desc: 'Material: acero de alta calidad enchapado en oro rose de 18k.\n\nLibres de níquel, plomo y cadmio, por lo que se consideran hipoalergénicas para la mayoría de las pieles.',
+      photos: [
+        'img/aretes-estrella-punto-de-luz-01.jpg',
+        'img/aretes-estrella-punto-de-luz-02.jpg',
+        'img/aretes-estrella-punto-de-luz-03.jpg',
+        'img/aretes-estrella-punto-de-luz-04.jpg',
+        'img/aretes-estrella-punto-de-luz-05.jpg',
+        'img/aretes-estrella-punto-de-luz-06.jpg'
+      ]
+    },
+    'ar-02': {
+      desc: 'Material: acero de alta calidad enchapado en oro rose de 18k.\n\nLibres de níquel, plomo y cadmio, por lo que se consideran hipoalergénicas para la mayoría de las pieles.',
+      photos: [
+        'img/aretes-nudo-de-bruja-01.jpg',
+        'img/aretes-nudo-de-bruja-02.jpg',
+        'img/aretes-nudo-de-bruja-03.jpg',
+        'img/aretes-nudo-de-bruja-04.jpg',
+        'img/aretes-nudo-de-bruja-05.jpg'
+      ]
+    },
+    'ar-03': {
+      desc: 'Material: acero de alta calidad enchapado en oro rose de 18k.\n\nLibres de níquel, plomo y cadmio, por lo que se consideran hipoalergénicas para la mayoría de las pieles.',
+      photos: [
+        'img/aretes-mini-corazon-01.jpg',
+        'img/aretes-mini-corazon-02.jpg',
+        'img/aretes-mini-corazon-03.jpg',
+        'img/aretes-mini-corazon-04.jpg',
+        'img/aretes-mini-corazon-05.jpg'
+      ]
+    },
+    'ar-04': {
+      desc: 'Material: acero de alta calidad enchapado en oro rose de 18k.\n\nLibres de níquel, plomo y cadmio, por lo que se consideran hipoalergénicas para la mayoría de las pieles.',
+      photos: [
+        'img/aretes-bombita-01.jpg',
+        'img/aretes-bombita-02.jpg',
+        'img/aretes-bombita-03.jpg',
+        'img/aretes-bombita-04.jpg',
+        'img/aretes-bombita-05.jpg'
+      ]
+    },
+    'ar-05': {
+      desc: 'Material: acero de alta calidad enchapado en oro rose de 18k.\n\nLibres de níquel, plomo y cadmio, por lo que se consideran hipoalergénicas para la mayoría de las pieles.',
+      photos: [
+        'img/argollas-corazon-perla-01.jpg',
+        'img/argollas-corazon-perla-02.jpg',
+        'img/argollas-corazon-perla-03.jpg',
+        'img/argollas-corazon-perla-04.jpg',
+        'img/argollas-corazon-perla-05.jpg'
+      ]
+    },
+    'ar-06': {
+      desc: 'Material: acero de alta calidad enchapado en oro rose de 18k.\n\nLibres de níquel, plomo y cadmio, por lo que se consideran hipoalergénicas para la mayoría de las pieles.',
+      photos: [
+        'img/argollas-ada-luz-01.jpg',
+        'img/argollas-ada-luz-02.jpg',
+        'img/argollas-ada-luz-03.jpg',
+        'img/argollas-ada-luz-04.jpg',
+        'img/argollas-ada-luz-05.jpg'
+      ]
+    },
+    'ar-07': {
+      desc: 'Material: acero de alta calidad enchapado en oro rose de 18k.\n\nLibres de níquel, plomo y cadmio, por lo que se consideran hipoalergénicas para la mayoría de las pieles.',
+      photos: [
+        'img/argollas-cuadradas-lisas-01.jpg',
+        'img/argollas-cuadradas-lisas-02.jpg',
+        'img/argollas-cuadradas-lisas-03.jpg',
+        'img/argollas-cuadradas-lisas-04.jpg',
+        'img/argollas-cuadradas-lisas-05.jpg',
+        'img/argollas-cuadradas-lisas-06.jpg'
+      ]
+    },
+    'ar-08': {
+      desc: 'Material: acero de alta calidad enchapado en oro rose de 18k.\n\nLibres de níquel, plomo y cadmio, por lo que se consideran hipoalergénicas para la mayoría de las pieles.',
+      photos: [
+        'img/argollas-hojitas-01.jpg'
+      ]
+    }
+  };
 
   var grid = document.getElementById('grid');
   var filtersEl = document.getElementById('filters');
@@ -302,17 +523,20 @@
   function renderGrid(){
     grid.innerHTML = '';
     PRODUCTS.filter(function(p){return currentCat==='todo' || p.cat===currentCat;}).forEach(function(p){
+      var soldOut = p.qty<=0;
+      var media = PRODUCT_MEDIA[p.id];
+      var tag = soldOut ? '<span class="stock-tag out">Agotado</span>' : (p.qty<=1?'<span class="stock-tag">Última pieza</span>':'');
+      var badge = media ? '<span class="photo-badge"><svg viewBox="0 0 24 24"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.4" fill="var(--card-bg)"/></svg>Ver '+media.photos.length+(media.photos.length===1?' foto':' fotos')+'</span>' : '';
       var card = document.createElement('div');
-      card.className = 'card';
+      card.className = 'card'+(soldOut?' sold-out':'');
       card.innerHTML =
-        '<div class="card-art">'+ICONS[p.icon]+'</div>'+
+        '<div class="card-art'+(media?' has-media':'')+'" data-id="'+p.id+'">'+ICONS[p.icon]+tag+badge+'</div>'+
         '<div class="card-body">'+
           '<div class="kicker">'+p.cat+'</div>'+
           '<h3>'+p.name+'</h3>'+
-          '<p>'+p.desc+'</p>'+
           '<div class="card-foot">'+
             '<span class="price">S/ '+p.price+'</span>'+
-            '<button class="add-btn" data-id="'+p.id+'">Agregar</button>'+
+            '<button class="add-btn" data-id="'+p.id+'"'+(soldOut?' disabled':'')+'>'+(soldOut?'Agotado':'Agregar')+'</button>'+
           '</div>'+
         '</div>';
       grid.appendChild(card);
@@ -331,22 +555,26 @@
   var cart = {};
   function loadCart(){
     try{
-      var raw = localStorage.getItem('valiam_cart');
+      var raw = localStorage.getItem('kukis_cart');
       if(raw) cart = JSON.parse(raw) || {};
     }catch(e){ cart = {}; }
   }
   function saveCart(){
-    try{ localStorage.setItem('valiam_cart', JSON.stringify(cart)); }catch(e){}
+    try{ localStorage.setItem('kukis_cart', JSON.stringify(cart)); }catch(e){}
   }
   function productById(id){ return PRODUCTS.find(function(p){return p.id===id;}); }
 
   function addToCart(id){
-    cart[id] = (cart[id]||0) + 1;
+    var p = productById(id);
+    var max = p ? p.qty : 99;
+    cart[id] = Math.min((cart[id]||0) + 1, max);
     saveCart(); renderAll();
   }
   function changeQty(id, delta){
     if(!cart[id]) return;
-    cart[id] += delta;
+    var p = productById(id);
+    var max = p ? p.qty : 99;
+    cart[id] = Math.min(cart[id] + delta, max);
     if(cart[id] <= 0) delete cart[id];
     saveCart(); renderAll();
   }
@@ -407,11 +635,15 @@
 
   grid.addEventListener('click', function(e){
     var btn = e.target.closest('.add-btn');
-    if(!btn) return;
-    addToCart(btn.dataset.id);
-    btn.classList.add('added');
-    btn.textContent = 'Agregado';
-    setTimeout(function(){ btn.classList.remove('added'); btn.textContent='Agregar'; }, 900);
+    if(btn){
+      addToCart(btn.dataset.id);
+      btn.classList.add('added');
+      btn.textContent = 'Agregado';
+      setTimeout(function(){ btn.classList.remove('added'); btn.textContent='Agregar'; }, 900);
+      return;
+    }
+    var art = e.target.closest('.card-art.has-media');
+    if(art){ openProductModal(art.dataset.id); }
   });
 
   drawerItems.addEventListener('click', function(e){
@@ -434,6 +666,117 @@
   document.getElementById('closeCart').addEventListener('click', closeDrawer);
   scrim.addEventListener('click', closeDrawer);
 
+  /* ---------- Ficha de producto: galería + descripción ---------- */
+  var pmodal = document.getElementById('pmodal');
+  var pmodalScrim = document.getElementById('pmodalScrim');
+  var pmodalMain = document.getElementById('pmodalMain');
+  var pmodalThumbs = document.getElementById('pmodalThumbs');
+  var pmodalCat = document.getElementById('pmodalCat');
+  var pmodalName = document.getElementById('pmodalName');
+  var pmodalDesc = document.getElementById('pmodalDesc');
+  var pmodalPrice = document.getElementById('pmodalPrice');
+  var pmodalAdd = document.getElementById('pmodalAdd');
+  var pmodalPrev = document.getElementById('pmodalPrev');
+  var pmodalNext = document.getElementById('pmodalNext');
+  var currentModalProduct = null;
+  var currentPhotoIndex = 0;
+
+  function renderModalPhoto(){
+    var media = PRODUCT_MEDIA[currentModalProduct.id];
+    pmodalMain.innerHTML = '<img src="'+media.photos[currentPhotoIndex]+'" alt="'+currentModalProduct.name+'">';
+    pmodalThumbs.querySelectorAll('img').forEach(function(t,i){
+      t.classList.toggle('active', i===currentPhotoIndex);
+    });
+  }
+
+  function openProductModal(id){
+    var p = productById(id);
+    var media = PRODUCT_MEDIA[id];
+    if(!p || !media) return;
+    currentModalProduct = p;
+    currentPhotoIndex = 0;
+    pmodalCat.textContent = p.cat;
+    pmodalName.textContent = p.name;
+    pmodalDesc.textContent = media.desc || '';
+    pmodalPrice.textContent = 'S/ '+p.price;
+    pmodalAdd.dataset.id = p.id;
+    pmodalAdd.disabled = p.qty<=0;
+    pmodalAdd.textContent = p.qty<=0 ? 'Agotado' : 'Agregar al carrito';
+    pmodalThumbs.innerHTML = media.photos.map(function(src,i){
+      return '<img src="'+src+'" data-i="'+i+'" alt="Foto '+(i+1)+'">';
+    }).join('');
+    renderModalPhoto();
+    pmodal.classList.add('open');
+    pmodalScrim.classList.add('open');
+  }
+  function closeProductModal(){
+    pmodal.classList.remove('open');
+    pmodalScrim.classList.remove('open');
+    currentModalProduct = null;
+  }
+  function stepPhoto(delta){
+    var media = PRODUCT_MEDIA[currentModalProduct.id];
+    var n = media.photos.length;
+    currentPhotoIndex = (currentPhotoIndex + delta + n) % n;
+    renderModalPhoto();
+  }
+
+  document.getElementById('pmodalClose').addEventListener('click', closeProductModal);
+  pmodalScrim.addEventListener('click', closeProductModal);
+  pmodalPrev.addEventListener('click', function(){ stepPhoto(-1); });
+  pmodalNext.addEventListener('click', function(){ stepPhoto(1); });
+  pmodalThumbs.addEventListener('click', function(e){
+    var t = e.target.closest('img[data-i]');
+    if(!t) return;
+    currentPhotoIndex = Number(t.dataset.i);
+    renderModalPhoto();
+  });
+  pmodalAdd.addEventListener('click', function(){
+    if(pmodalAdd.disabled) return;
+    addToCart(pmodalAdd.dataset.id);
+    pmodalAdd.textContent = 'Agregado ✓';
+    setTimeout(function(){ if(currentModalProduct) pmodalAdd.textContent = 'Agregar al carrito'; }, 900);
+  });
+  document.addEventListener('keydown', function(e){
+    if(!pmodal.classList.contains('open')) return;
+    if(e.key === 'Escape') closeProductModal();
+    if(e.key === 'ArrowLeft') stepPhoto(-1);
+    if(e.key === 'ArrowRight') stepPhoto(1);
+  });
+
+  /* ---------- Google Sheets: leer stock real ---------- */
+  function syncStockFromSheet(){
+    if(!SHEET_API_URL || SHEET_API_URL.indexOf('http')!==0) return;
+    fetch(SHEET_API_URL + '?action=stock')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(!data || !data.ok || !Array.isArray(data.products)) return;
+        var byName = {};
+        data.products.forEach(function(p){ byName[normalizeName(p.name)] = p; });
+        PRODUCTS.forEach(function(p){
+          var match = byName[normalizeName(p.name)];
+          if(match) p.qty = match.qty;
+        });
+        renderAll();
+      })
+      .catch(function(){ /* sin conexión al Excel: se queda con el stock local */ });
+  }
+
+  /* ---------- Google Sheets: registrar pedido ---------- */
+  function sendOrderToSheet(ids){
+    if(!SHEET_API_URL || SHEET_API_URL.indexOf('http')!==0) return;
+    var items = ids.map(function(id){
+      var p = productById(id);
+      return { name: p.name, qty: cart[id], price: p.price };
+    });
+    try{
+      fetch(SHEET_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action:'order', items:items })
+      }).catch(function(){});
+    }catch(e){}
+  }
+
   /* ---------- WhatsApp checkout ---------- */
   checkoutBtn.addEventListener('click', function(){
     var ids = Object.keys(cart);
@@ -442,17 +785,20 @@
       var p = productById(id);
       return cart[id]+'x '+p.name+' — S/ '+(p.price*cart[id]);
     });
-    var msg = 'Hola, VALIAM. Quiero hacer el siguiente pedido:\n\n'
+    var msg = 'Hola, Kukis Colors. Quiero hacer el siguiente pedido:\n\n'
       + lines.join('\n')
       + '\n\nTotal: S/ '+cartTotal()
       + '\n\nNombre:\nDirección de envío:';
+    sendOrderToSheet(ids);
     var url = 'https://wa.me/51969080504?text=' + encodeURIComponent(msg);
     window.open(url, '_blank', 'noopener');
   });
 
   loadCart();
   renderAll();
+  syncStockFromSheet();
 })();
 </script>
+
 </body>
 </html>
