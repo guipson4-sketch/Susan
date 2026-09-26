@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://guipson4-sketch.github.io/Susan/sitemap.xml
+Sitemap: https://kukiscolors.com/sitemap.xml
