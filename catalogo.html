@@ -561,6 +561,7 @@
     {id:'ar-23',cat:'aretes',icon:'aretes',name:'Aretes Filigrana Rose',qty:3,price:40},
     {id:'ar-24',cat:'aretes',icon:'aretes',name:'Argollas Lisas Rose',qty:3,price:25},
     {id:'ar-25',cat:'aretes',icon:'aretes',name:'Argollas Lilac',qty:3,price:30},
+    {id:'ar-28',cat:'aretes',icon:'aretes',name:'Argollas Lilac II',qty:3,price:30},
     {id:'ar-26',cat:'aretes',icon:'aretes',name:'Aretes Tornasol',qty:3,price:40},
     {id:'ar-27',cat:'aretes',icon:'aretes',name:'Aretes Croissant',qty:2,price:35},
     {id:'an-01',cat:'anillos',icon:'anillo',name:'Anillo Rose Talla 6 y 7',qty:9,price:30},
@@ -1009,6 +1010,14 @@
         'img/arete-croasan-01.webp',
         'img/arete-croasan-02.webp'
       ]
+    },
+    'ar-28': {
+      desc: 'Material: acero de alta calidad enchapado en oro rose de 18k.\n\nLibres de níquel, plomo y cadmio, por lo que se consideran hipoalergénicas para la mayoría de las pieles.',
+      photos: [
+        'img/argollas-lilac-ii-01.webp',
+        'img/argollas-lilac-ii-02.webp',
+        'img/argollas-lilac-ii-03.webp'
+      ]
     }
   };
 
@@ -1153,7 +1162,7 @@
 
   document.getElementById('clearCart').addEventListener('click', clearCart);
 
-  /* ---------- Drawer open/close ------------ */
+  /* ---------- Drawer open/close ---------- */
   var drawer = document.getElementById('drawer');
   var scrim = document.getElementById('scrim');
   function openDrawer(){ drawer.classList.add('open'); scrim.classList.add('open'); }
