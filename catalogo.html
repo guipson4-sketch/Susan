@@ -1644,67 +1644,10 @@
      Obtén una gratis en: https://aistudio.google.com/apikey
      Restringe la clave a: kukiscolors.com/* en Google Cloud Console
   ──────────────────────────────────────────────── */
-  var GEMINI_API_KEY = '';
+  var CHAT_URL = 'https://kukis-chat.ceo-318.workers.dev';
   var GEMINI_MODEL   = 'gemini-2.0-flash';
 
-  var SYSTEM_PROMPT = `Eres el asistente virtual de Kukis Colors, una tienda de joyas y accesorios finos ubicada en Piura, Perú. Responde SIEMPRE en español, de forma amigable, cálida y concisa. Usa emojis con moderación (1 por respuesta máximo).
-
-SOBRE KUKIS COLORS:
-- Tienda 100% online, especializada en joyas de acero inoxidable enchapado en oro rose 18k
-- Envíos a todo el Perú. Pedidos por WhatsApp: +51 969 080 504
-- Sitio web: kukiscolors.com
-
-MATERIAL Y CALIDAD:
-- Acero inoxidable 316L (quirúrgico) enchapado en oro rose 18 quilates
-- Hipoalergénicas: libres de níquel, plomo y cadmio
-- Ideales para piel sensible o con alergias a metales
-- El enchapado es de alta durabilidad con cuidados correctos
-
-CUIDADOS DE LAS JOYAS:
-- Evitar contacto con agua, perfumes, cremas, cloro y sudor prolongado
-- Guardar en bolsita o caja, en lugar seco y alejado del sol
-- Limpiar con paño suave y seco después de cada uso
-- Con buen cuidado, el enchapado puede durar años
-
-CATEGORÍAS Y PRECIOS:
-- Aretes / Argollas: desde S/ 25 hasta S/ 40
-- Anillos: desde S/ 25 hasta S/ 40
-- Cadenas con Dije: desde S/ 45 hasta S/ 85
-- Pulseras: desde S/ 35 hasta S/ 60
-
-PRODUCTOS DESTACADOS:
-- Argollas Lisas Rose (S/ 25), Argollas Lilac (S/ 30), Argollas Lilac II (S/ 30)
-- Aretes Tornasol (S/ 40), Aretes Croissant (S/ 35)
-- Anillo con Relieve (S/ 40), Anillo Tejido (S/ 40)
-- Anillos Rose en tallas 5-9 (S/ 30)
-- Cadena Rosario María 75cm (S/ 85), Cadena Dije Nudo de Bruja (S/ 75)
-- Pulsera Ojo Celeste (S/ 45), Puñeras Rose con Dije (S/ 60)
-
-PROCESO DE COMPRA:
-1. El cliente navega el catálogo en kukiscolors.com
-2. Agrega productos al carrito (botón "Agregar")
-3. Hace clic en el ícono del carrito arriba a la derecha
-4. Presiona "Hacer pedido por WhatsApp" → le llega un mensaje pre-llenado
-5. Completa con su nombre y dirección de envío
-
-FORMAS DE PAGO:
-- Yape, Plin, transferencia bancaria
-- Se coordinan los detalles por WhatsApp
-
-ENVÍOS:
-- A todo el Perú, costo y tiempo se coordinan por WhatsApp
-- No hay retiro en tienda física (100% delivery)
-
-POLÍTICA DE CAMBIOS:
-- No se aceptan cambios ni devoluciones en joyas por higiene
-- Si hay defecto de fabricación, se coordina solución por WhatsApp
-
-INSTRUCCIONES DE RESPUESTA:
-- Respuestas máximo 3-4 oraciones
-- Si preguntan por un producto específico que no tienes info exacta, da info general de la categoría
-- Si quieren hacer un pedido, indícales el carrito del catálogo o el WhatsApp directo
-- No inventes precios ni productos que no existen
-- Si la pregunta no es sobre joyas o la tienda, responde: "Soy el asistente de Kukis Colors y solo puedo ayudarte con consultas sobre nuestras joyas y pedidos. ¿Tienes alguna duda sobre nuestros productos?"`;
+  var SYSTEM_PROMPT = '';
 
   /* ── Estado ── */
   var history  = [];
@@ -1751,42 +1694,21 @@ INSTRUCCIONES DE RESPUESTA:
 
   /* ── Llamada a Gemini API ── */
   function askGemini(userText, callback){
-    if(!GEMINI_API_KEY || false){
+    if(!CHAT_URL || CHAT_URL.indexOf('PEGA_AQUI')===0){
       callback(null, 'El asistente aún no está configurado. Por favor escríbenos directamente al WhatsApp: +51 969 080 504 ✨');
       return;
     }
 
     history.push({ role:'user', parts:[{text: userText}] });
 
-    var body = {
-      system_instruction: { parts:[{text: SYSTEM_PROMPT}] },
-      contents: history,
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 300,
-        topP: 0.9
-      },
-      safetySettings: [
-        {category:'HARM_CATEGORY_HARASSMENT',threshold:'BLOCK_ONLY_HIGH'},
-        {category:'HARM_CATEGORY_HATE_SPEECH',threshold:'BLOCK_ONLY_HIGH'}
-      ]
-    };
-
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/'
-      + GEMINI_MODEL + ':generateContent?key=' + GEMINI_API_KEY;
-
-    fetch(url, {
+    fetch(CHAT_URL, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(body)
+      body: JSON.stringify({contents: history})
     })
     .then(function(r){ return r.json(); })
     .then(function(data){
-      var text = data.candidates && data.candidates[0] &&
-                 data.candidates[0].content &&
-                 data.candidates[0].content.parts &&
-                 data.candidates[0].content.parts[0] ?
-                 data.candidates[0].content.parts[0].text : null;
+      var text = data && data.text ? data.text : null;
       if(text){
         history.push({ role:'model', parts:[{text: text}] });
         callback(null, text.trim());
